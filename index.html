@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <title>Deako Interaction Demo</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="wrapper">
+      <div>
+        <div id="dot1" class="dot"></div>
+        <div id="dot2" class="dot"></div>
+      </div>
+      <button id="pair" class="btn">Pair with app</button>
+    </div>
+    <h1 id="timer">0</h1>
+  </div>
+
+  <script>
+
+    $(document).ready(function () {
+      var mouseDownCount = 0;
+      var mdcTimer;
+      let state = '';
+      var phase1 = false;
+      var white_pulse = false;
+      var blue_prime = false;
+
+      var dot1 = {
+        state: '',
+        phase1: false,
+        blue_prime: false,
+
+      }
+
+      var dot2 = {
+        state: '',
+        phase1: false,
+        blue_prime: false
+      }
+
+
+      $('#dot1').on('mousedown', function (e) {
+        startMouseCount(dot1, $("#dot1"));
+      });
+
+      $('#dot1').on('mouseup', function (e) {
+        endMouseCount(dot1, $("#dot1"));
+      })
+
+      $('#dot2').on('mousedown', function (e) {
+        startMouseCount(dot2, $("#dot2"));
+      });
+
+      $('#dot2').on('mouseup', function (e) {
+        endMouseCount(dot2, $("#dot2"));
+      })
+
+      $('#pair').on("click", function (e) {
+        pairWithApp($('.dot.pulse-trigger-blue'));
+      })
+
+
+      function pairWithApp(elem) {
+        updateClasses(elem);
+        elem.addClass('pulse-trigger-green');
+        setTimeout(function () {
+          updateClasses(elem);
+          elem.addClass("white");
+          setTimeout(function () {
+            $("#pair").removeClass("active");
+            resetState(dot1, elem);
+            resetState(dot2, elem);
+          }, 2000)
+        }, 5000)
+      }
+
+      function startMouseCount(dot, elem) {
+        mdcTimer = window.setInterval(function () {
+          if (dot.phase1 && dot.blue_prime && dot.state == "white_pulse") {
+            if (dot.state != "blue" && mouseDownCount < 8 && mouseDownCount >= 4) {
+              dot.state = "blue";
+              $("#pair").addClass("active");
+            }
+          }
+
+          if (dot.phase1 && dot.state == "white" && mouseDownCount < 8) {
+            dot.state = "white_pulse";
+            updateClasses(elem);
+            elem.addClass('pulse-trigger');
+          }
+
+          if (!dot.phase1 && mouseDownCount == 3) {
+            dot.state = "white";
+            elem.addClass('white');
+            dot.phase1 = true;
+          }
+
+          if (mouseDownCount >= 8) {
+            dot.state = "red";
+          }
+          console.log(dot.state)
+          checkIfDotsAreBothBlue();
+          updateState(dot, elem);
+          mouseDownCount++;
+          $("#timer").text(mouseDownCount);
+        }, 1000);
+        return false;
+      }
+
+      function endMouseCount(dot, elem) {
+        clearInterval(mdcTimer);
+        mouseDownCount = 0;
+        $("#timer").text(mouseDownCount);
+
+        if (dot.phase1) {
+          switch (dot.state) {
+            case "white":
+              updateClasses(elem);
+              elem.addClass('pulse-trigger');
+              dot.blue_prime = true;
+              break
+            case "white_pulse":
+              dot.blue_prime = true;
+              break
+            case "red":
+              updateClasses(elem);
+              elem.addClass('pulse-trigger-red');
+              setTimeout(function () {
+                updateClasses(elem);
+                elem.addClass('white');
+                setTimeout(function () {
+                  resetState(dot, elem);
+                }, 2000)
+              }, 5000)
+              break
+            case "blue":
+              updateClasses(elem);
+              elem.addClass('pulse-trigger-blue');
+              setTimeout(function () {
+                resetState(dot, elem);
+              }, (90 * 1000))
+              break
+          }
+        }
+      }
+
+      function checkIfDotsAreBothBlue() {
+        if (dot1.state == "blue" && dot2.state == "blue") {
+          console.log("both are blue")
+          $("#pair").removeClass('active');
+          setTimeout(function () {
+            setTimeout(function () {
+              updateClasses($(".dot"));
+              $(".dot").addClass("white");
+              setTimeout(function () {
+                resetState(dot1, $("#dot1"));
+                resetState(dot2, $("#dot2"));
+              }, 2000);
+              clearInterval(mdcTimer);
+            }, 2000);
+          }, 2000);
+        }
+        return;
+      }
+
+      function resetState(dot, elem) {
+        updateClasses(elem);
+        dot.state = "";
+        dot.phase1 = false;
+        dot.blue_prime = false;
+      }
+
+      function updateClasses(elem) {
+        elem.attr('class', 'dot');
+      }
+
+      function updateState(dot, elem) {
+        switch (dot.state) {
+          case "white":
+            elem.addClass('white');
+            break
+          case "red":
+            updateClasses(elem);
+            elem.addClass('red');
+            break
+          case "blue":
+            updateClasses(elem);
+            elem.addClass('blue');
+            break
+        }
+      }
+
+    });
+
+  </script>
+</body>
+
+</html>

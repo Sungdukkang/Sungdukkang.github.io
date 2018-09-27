@@ -1,0 +1,138 @@
+body {
+  font-family: sans-serif;
+  background: #333;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#timer {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 60px;
+}
+
+.btn {
+  padding: 15px 20px;
+  background: #999999;
+  font-size: 12px;
+  border: none;
+  font-weight: 600;
+  outline: none;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+#pair {
+  visibility: hidden;
+}
+
+#pair.active {
+  visibility: visible;
+}
+
+.wrapper {
+  background: #f1f1f1;
+  padding: 80px;
+  text-align: center;
+}
+
+.dot {
+  height: 100px;
+  width: 100px;
+  margin: 50px;
+  background: #999999;
+  border-radius: 50%;
+  transition: 0.5s ease background-color;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.white {
+  background: white;
+}
+
+.red {
+  background: red;
+}
+
+.blue {
+  background: #68ccdd;
+}
+
+.pulse-trigger {
+  animation-name: pulse;
+  animation-duration: 1s;
+  animation-iteration-count: 90;
+}
+.pulse-trigger-red {
+  animation-name: pulse-red;
+  animation-duration: 1s;
+  animation-iteration-count: 5;
+}
+.pulse-trigger-blue {
+  animation-name: pulse-blue;
+  animation-duration: 1s;
+  animation-iteration-count: 90;
+}
+
+.pulse-trigger-green {
+  animation-name: pulse-green;
+  animation-duration: 1s;
+  animation-iteration-count: 5;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: white;
+  }
+  50% {
+    background-color: grey;
+  }
+  100% {
+    background-color: white;
+  }
+}
+
+@keyframes pulse-red {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: red;
+  }
+}
+
+@keyframes pulse-blue {
+  0% {
+    background-color: #68ccdd;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: #68ccdd;
+  }
+}
+
+@keyframes pulse-green {
+  0% {
+    background-color: #a0d468;
+  }
+  50% {
+    background-color: white;
+  }
+  100% {
+    background-color: #a0d468;
+  }
+}
