@@ -84,7 +84,7 @@
       function startMouseCount(dot, elem) {
         mdcTimer = window.setInterval(function () {
           if (dot.phase1 && dot.blue_prime && dot.state == "white_pulse") {
-            if (dot.state != "blue" && mouseDownCount < 8 && mouseDownCount >= 4) {
+            if (dot.state != "blue" && mouseDownCount < 8 && mouseDownCount >= 2) {
               dot.state = "blue";
               $("#pair").addClass("active");
             }
@@ -96,7 +96,7 @@
             elem.addClass('pulse-trigger');
           }
 
-          if (!dot.phase1 && mouseDownCount == 3) {
+          if (!dot.phase1 && mouseDownCount == 1) {
             dot.state = "white";
             elem.addClass('white');
             dot.phase1 = true;
