@@ -27,10 +27,10 @@
     $(document).ready(function () {
       var mouseDownCount = 0;
       var mdcTimer;
-      let state = '';
       var phase1 = false;
       var white_pulse = false;
       var blue_prime = false;
+      var pairing_mode = false;
 
       var dot1 = {
         state: '',
@@ -63,7 +63,7 @@
       })
 
       $('#pair').on("click", function (e) {
-        pairWithApp($('.dot.pulse-trigger-blue'));
+        pairWithApp($('.dot.pulse-trigger'));
       })
 
 
@@ -84,9 +84,9 @@
       function startMouseCount(dot, elem) {
         mdcTimer = window.setInterval(function () {
           if (dot.phase1 && dot.blue_prime && dot.state == "white_pulse") {
-            if (dot.state != "blue" && mouseDownCount < 8 && mouseDownCount >= 2) {
+            if (dot.state != "blue" && mouseDownCount < 8 && mouseDownCount > 1) {
               dot.state = "blue";
-              $("#pair").addClass("active");
+              $("#pair").removeClass("active");
             }
           }
 
@@ -100,6 +100,7 @@
             dot.state = "white";
             elem.addClass('white');
             dot.phase1 = true;
+            $("#pair").addClass("active");
           }
 
           if (mouseDownCount >= 8) {
@@ -141,31 +142,33 @@
               }, 5000)
               break
             case "blue":
+              if (pairing_mode) {
+                break;
+              }
               updateClasses(elem);
               elem.addClass('pulse-trigger-blue');
               setTimeout(function () {
                 resetState(dot, elem);
-              }, (90 * 1000))
-              break
+              }, (90 * 1000));
+              break;
           }
         }
       }
 
       function checkIfDotsAreBothBlue() {
         if (dot1.state == "blue" && dot2.state == "blue") {
-          console.log("both are blue")
-          $("#pair").removeClass('active');
+          pairing_mode = true;
+          updateClasses($(".dot"));
+          $(".dot").addClass("pulse-trigger-green");
           setTimeout(function () {
+            updateClasses($(".dot"));
+            $(".dot").addClass("white");
             setTimeout(function () {
-              updateClasses($(".dot"));
-              $(".dot").addClass("white");
-              setTimeout(function () {
-                resetState(dot1, $("#dot1"));
-                resetState(dot2, $("#dot2"));
-              }, 2000);
-              clearInterval(mdcTimer);
+              resetState(dot1, $("#dot1"));
+              resetState(dot2, $("#dot2"));
             }, 2000);
-          }, 2000);
+            clearInterval(mdcTimer);
+          }, 5000);
         }
         return;
       }
@@ -191,6 +194,9 @@
             elem.addClass('red');
             break
           case "blue":
+            if (pairing_mode) {
+              break;
+            }
             updateClasses(elem);
             elem.addClass('blue');
             break
