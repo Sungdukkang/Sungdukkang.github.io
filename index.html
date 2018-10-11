@@ -29,14 +29,12 @@
       var mdcTimer;
       var phase1 = false;
       var white_pulse = false;
-      var blue_prime = false;
       var pairing_mode = false;
 
       var dot1 = {
         state: '',
         phase1: false,
         blue_prime: false,
-
       }
 
       var dot2 = {
@@ -196,6 +194,7 @@
             break
           case "blue":
             if (pairing_mode) {
+              console.log("Blue");
               break;
             }
             updateClasses(elem);
